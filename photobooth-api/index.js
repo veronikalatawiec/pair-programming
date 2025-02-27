@@ -10,20 +10,39 @@ app.use(express.json());
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const upload = "./data/uploads"
+
 // strip endpoints
 app.post("/", (req, res) => {
-    //recieve 3 photo urls
-    const photos = req.body;
-    const newPhotos = photos.map(photo => ({
-        url: photo.url,
-        id: uuidv4(),
-    }));
-    //store object as a new photo in ./data/photos
-    const existingPhotos = JSON.parse(fs.readFileSync("./data/photos.json"));
-    existingPhotos.push(...newPhotos);
-    fs.writeFileSync(("./data/photos.json"), JSON.stringify(existingPhotos))
-    //respond with 201 and the new photo object
-    res.status(201).json(newPhotos);
+
+    const busboy = new busboy ({headers: req.headers});
+    const uploadedPhotos = [];
+    const photos = [];
+    busboy.on("file", (fieldname, file, filename) => {
+        const fileId = uuidv4();
+        const filePath = path.join(upload, `${fileId}-${filename}`);
+        file.pipe(fs.createWriteStream(filePath));
+        uploadedPhotos.push({ fieldname, file, filePath, filename });
+        });
+    
+        busboy.on("finish", () => {
+        uploadedPhotos.forEach((fileInfo) => {
+          const newPhoto = {
+            url: `/uploads/${path.basename(fileInfo.filePath)}`,
+            id: uuidv4(),
+            timestamp: Date.now(),
+          };
+          photos.push(newPhoto);
+        });
+    
+        const existingPhotos = JSON.parse(fs.readFileSync(("./data/photos.json"), "utf-8"));
+        existingPhotos.push(...photos);
+        fs.writeFileSync(("./data/photos.json"), JSON.stringify(existingPhotos));
+        
+        res.status(201).json(photos);
+        });
+
+    req.pipe(busboy);
 });
 
 app.get("/", (_req, res) => {
