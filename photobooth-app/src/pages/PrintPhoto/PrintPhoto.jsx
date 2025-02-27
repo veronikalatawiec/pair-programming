@@ -1,8 +1,14 @@
+import Webcam from "react-webcam";
+import React from "react";
+import { useref } from "react";
+import PhotoStrip from "../../components/PhotoStrip/PhotoStrip"
+import "./PrintPhoto.scss"
+
 function PrintPhoto() {
   return (
     <div className="PhotoPrint photo">
-      Your photo
-      <Webcam />
+      Looking great!
+      <PhotoStrip />
     </div>
   );
 }
