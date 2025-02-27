@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import HomePage from "./pages/HomePage/HomePage";
-import PhotoBooth from "./pages/PhotoBooth/PhotoBooth";
-import PrintPhoto from "./pages/PrintPhoto/PrintPhoto";
+import PhotoBooth from "../src/pages/PhotoBooth/PhotoBooth";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.scss";
 
@@ -13,7 +11,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<PhotoBooth />} />
           <Route path="/photobooth" element={<PhotoBooth />} />
-          <Route path="/download" element={<PrintPhoto />} />
         </Routes>
       </Router>
     </>

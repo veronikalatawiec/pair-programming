@@ -1,8 +1,10 @@
 import Webcam from "react-webcam";
-import React from "react";
-import { useref } from "react";
+import React, { useState, useRef } from "react";
 
 function PhotoBooth() {
+  const [photos, setPhotos] = useState([]);
+  const webcamRef = useRef(null);
+
   return (
     <div className="PhotoBooth">
       React Webcam
