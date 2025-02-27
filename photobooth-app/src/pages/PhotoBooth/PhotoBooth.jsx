@@ -1,5 +1,7 @@
 import Webcam from "react-webcam";
 import React, { useState, useRef } from "react";
+import "./PhotoBooth.scss";
+
 
 function PhotoBooth() {
   const [photos, setPhotos] = useState([]);
@@ -29,15 +31,16 @@ function PhotoBooth() {
   };
 
   return (
-    <div className="PhotoBooth">
+    <div className="photobooth">
+      <div className="photo__webcam">
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/png"
         width="100%"
-      />
-      <button onClick={capturePhoto}>Take Photo</button>
-      <button onClick={handleSubmit}>Create My Photo Strip</button>
+      /></div>
+      <button className= "photo__click-button" onClick={capturePhoto}>Take Photo</button>
+      <button className="photo__strip-button" onClick={handleSubmit}>Create My Photo Strip</button>
       <div>
         {photos.map((photo, index) => (
           <img className="captured-photo" key={index} src={photo} alt={`Captured ${index}`} />
