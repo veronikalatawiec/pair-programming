@@ -1,6 +1,7 @@
 import React from "react";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import "./PhotoStrip.scss"
+// import Link from "react-router-dom";
 
 function PhotoStrip ({ image }) {
   const handleDownload = () => {
