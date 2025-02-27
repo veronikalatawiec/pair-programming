@@ -2,56 +2,66 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
-
-app.use(cors());
-app.use(express.static('public'));
-app.use(express.json());
+import { createCanvas, loadImage } from "canvas";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5173;
 
-const upload = "./data/uploads"
+app.use(cors());
+app.use(express.json());
 
-// strip endpoints
 app.post("/", (req, res) => {
+  console.log("Received request with body:", req.body);
+  const photos = req.body; // Array of base64 photo strings
+  const images = [];
 
-    const busboy = new busboy ({headers: req.headers});
-    const uploadedPhotos = [];
-    const photos = [];
-    busboy.on("file", (fieldname, file, filename) => {
-        const fileId = uuidv4();
-        const filePath = path.join(upload, `${fileId}-${filename}`);
-        file.pipe(fs.createWriteStream(filePath));
-        uploadedPhotos.push({ fieldname, file, filePath, filename });
-        });
-    
-        busboy.on("finish", () => {
-        uploadedPhotos.forEach((fileInfo) => {
-          const newPhoto = {
-            url: `/uploads/${path.basename(fileInfo.filePath)}`,
-            id: uuidv4(),
-            timestamp: Date.now(),
-          };
-          photos.push(newPhoto);
-        });
-    
-        const existingPhotos = JSON.parse(fs.readFileSync(("./data/photos.json"), "utf-8"));
-        existingPhotos.push(...photos);
-        fs.writeFileSync(("./data/photos.json"), JSON.stringify(existingPhotos));
-        
-        res.status(201).json(photos);
-        });
+  const loadAndCreate = (index = 0) => {
+    if (index >= photos.length) {
+      createPhotoStrip(images, res);
+      return;
+    }
+    const photo = photos[index];
+    loadImage(photo)
+      .then((image) => {
+        images.push(image);
+        loadAndCreate(index + 1);
+      })
+      .catch((error) => {
+        console.error("Error loading image", error);
+        res
+          .status(400)
+          .send("An error occurred while loading one of the images.");
+      });
+  };
 
-    req.pipe(busboy);
-});
+  loadAndCreate();
 
-app.get("/", (_req, res) => {
-    //get the photos from ./data/photos
-    const photos = JSON.parse(fs.readFileSync("./data/photos.json"));
-    // return the photo objects
-    res.status(200).json(photos);
+  const createPhotoStrip = (images, res) => {
+    const margin = 40;
+    const padding = 20;
+    const totalW = images[0].width * 3 + padding * 2 + margin * 2;
+    const totalH = images[0].height + margin * 2;
+    const canvas = createCanvas(totalW, totalH);
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#f1f1f1";
+    ctx.fillRect(0, 0, totalW, totalH);
+
+    images.forEach((image, index) => {
+      const x = margin + index * image.width + padding * index;
+      const y = margin;
+      ctx.drawImage(image, x, y);
+    });
+
+    const convertedStrip = canvas.toDataURL("image/png");
+
+    res.status(201).json({
+      id: uuidv4(),
+      image: convertedStrip,
+    });
+  };
 });
 
 app.listen(PORT, () => {
-  console.log(`running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:5173`);
 });
