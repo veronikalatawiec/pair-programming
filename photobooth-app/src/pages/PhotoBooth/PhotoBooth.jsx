@@ -13,7 +13,7 @@ function PhotoBooth() {
   const handleSubmit = async () => {
     if (photos.length === 3) {
       try {
-        const response = await fetch(`http://localhost:${PORT}/strips`, {
+        const response = await fetch(`http://localhost:${PORT}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -40,7 +40,12 @@ function PhotoBooth() {
       <button onClick={handleSubmit}>Create My Photo Strip</button>
       <div>
         {photos.map((photo, index) => (
-          <img className="captured-photo" key={index} src={photo} alt={`Captured ${index}`} />
+          <img
+            className="captured-photo"
+            key={index}
+            src={photo}
+            alt={`Captured ${index}`}
+          />
         ))}
       </div>
     </div>
