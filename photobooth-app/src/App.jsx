@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./App.scss"
 
 import PhotoBooth from "../src/pages/PhotoBooth/PhotoBooth";
 import PrintPhoto from "../src/pages/PrintPhoto/PrintPhoto";
