@@ -2,8 +2,9 @@ import Webcam from "react-webcam";
 
 import React from "react";
 import CaptureButton from "../../components/CaptureButton/CaptureButton"
-import { useref } from "react";
+import { useRef, useState } from "react";
 import "./PhotoBooth.scss"
+import {Link} from "react-router-dom";
 
 function PhotoBooth() {
   const [photos, setPhotos] = useState([]);
@@ -49,8 +50,7 @@ function PhotoBooth() {
       Ready for your closeup?
       <div className="webcam_standin"></div>
       <Webcam />
-
-      <CaptureButton />
+      <Link to="/download"><CaptureButton /></Link>
       <Webcam
         audio={false}
         ref={webcamRef}
