@@ -1,5 +1,4 @@
 import Webcam from "react-webcam";
-
 import React from "react";
 import CaptureButton from "../../components/CaptureButton/CaptureButton"
 import { useRef, useState } from "react";
@@ -48,17 +47,14 @@ function PhotoBooth() {
   return (
     <div className="PhotoBooth">
       Ready for your closeup?
-      <div className="webcam_standin"></div>
-      <Webcam />
-      <Link to="/download"><CaptureButton /></Link>
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/png"
         width="100%"
-      />
-      <button onClick={capturePhoto}>Take Photo</button>
-      <button onClick={handleSubmit}>Create My Photo Strip</button>
+      /></div>
+      <button className= "photo__click-button" onClick={capturePhoto}>Take Photo</button>
+      <button className="photo__strip-button" onClick={handleSubmit}>Create My Photo Strip</button>
       <div>
         {photos.map((photo, index) => (
           <img
