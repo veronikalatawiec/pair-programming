@@ -1,0 +1,21 @@
+.button__download{
+        border-radius: 1.5rem;
+        border: 1px solid transparent;
+        padding: 01rem 1.2rem;
+        font-size: 1em;
+        font-weight: 500;
+        color: #64679f;
+        font-family: inherit;
+        cursor: pointer;
+        transition: border-color 0.25s;
+        background-color: aliceblue;
+
+      &:hover {
+        border-color: #7b7eb5;
+      }
+      &:focus,
+      button:focus-visible {
+        outline: 4px auto #7b7eb5;
+        background-color: rgb(232, 240, 247);
+      }
+}
